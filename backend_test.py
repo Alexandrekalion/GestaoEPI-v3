@@ -58,29 +58,36 @@ class EPIBiometricTester:
         except requests.exceptions.RequestException as e:
             return False, f"Request failed: {str(e)}", 0
 
-    def test_login(self):
-        """Test login with admin credentials"""
-        print("\n🔐 Testing Authentication...")
+    def test_all_user_logins(self):
+        """Test login with all required user profiles"""
+        print("\n🔐 Testing All User Profile Logins...")
         
-        # Test login with admin credentials as specified in requirements
-        success, response, status = self.make_request(
-            'POST', 'auth/login', 
-            {"username": "administrador", "password": "LR1a2b3c4567@"}
-        )
+        # Define all user credentials as specified in requirements
+        users = {
+            'admin': {"username": "administrador", "password": "LR1a2b3c4567@"},
+            'gestor': {"username": "gestor.teste", "password": "Gestor@2026!"},
+            'rh': {"username": "rh.teste", "password": "RH@2026teste!"},
+            'seguranca': {"username": "seguranca.teste", "password": "Seguranca@2026!"},
+            'almoxarifado': {"username": "almoxarifado.teste", "password": "Almox@2026teste!"}
+        }
         
-        if success and 'access_token' in response:
-            self.token = response['access_token']
-            must_change = response.get('must_change_password', False)
-            role = response.get('role', '')
+        for user_type, credentials in users.items():
+            success, response, status = self.make_request(
+                'POST', 'auth/login', credentials
+            )
             
-            self.log_result("Login with admin credentials", True)
-            self.log_result(f"Must change password: {must_change}", True)
-            self.log_result(f"User role: {role}", True)
-            
-            return must_change
-        else:
-            self.log_result("Login with admin credentials", False, f"Status: {status}, Response: {response}")
-            return False
+            if success and 'access_token' in response:
+                self.user_tokens[user_type] = response['access_token']
+                role = response.get('role', '')
+                self.log_result(f"Login {user_type} ({role})", True)
+            else:
+                self.log_result(f"Login {user_type}", False, f"Status: {status}, Response: {response}")
+        
+        # Set admin token as default
+        if 'admin' in self.user_tokens:
+            self.token = self.user_tokens['admin']
+            return True
+        return False
 
     def test_change_password(self):
         """Test password change"""
