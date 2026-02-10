@@ -5,14 +5,15 @@ import sys
 import json
 from datetime import datetime
 
-class CipolattiAPITester:
-    def __init__(self, base_url="https://epi-control-sys.preview.emergentagent.com"):
+class EPIBiometricTester:
+    def __init__(self, base_url="https://epi-biometric.preview.emergentagent.com"):
         self.base_url = base_url
         self.api_url = f"{base_url}/api"
         self.token = None
         self.tests_run = 0
         self.tests_passed = 0
         self.failed_tests = []
+        self.user_tokens = {}  # Store tokens for different user types
 
     def log_result(self, test_name, success, details=""):
         """Log test result"""
