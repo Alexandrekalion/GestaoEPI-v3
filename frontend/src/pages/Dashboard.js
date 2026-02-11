@@ -182,19 +182,7 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Licença do Painel - Apenas Admin */}
-        {license && (
-          <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-lg shadow-md p-6 text-white">
-            <h3 className="text-xl font-bold mb-2">Licença do Painel</h3>
-            <div className="flex items-baseline gap-2">
-              <p className="text-4xl font-bold font-mono">{license.days_remaining}</p>
-              <p className="text-emerald-100">dias restantes</p>
-            </div>
-            <p className="text-sm text-emerald-100 mt-2">
-              Expira em: {new Date(license.expires_at).toLocaleDateString('pt-BR')}
-            </p>
-          </div>
-        )}
+        {/* Licença removida do Dashboard - disponível apenas em Configurações */}
 
         {/* Alertas Detalhados */}
         {stats?.alerts && (
