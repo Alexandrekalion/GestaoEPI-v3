@@ -280,6 +280,53 @@ export default function ColaboradorDetalhes() {
       toast.error('Erro ao excluir template');
     }
   };
+  
+  // Upload de foto do colaborador
+  const handlePhotoUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    // Validar tipo de arquivo
+    if (!file.type.startsWith('image/')) {
+      toast.error('Por favor, selecione uma imagem válida');
+      return;
+    }
+    
+    // Validar tamanho (máx 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('A imagem deve ter no máximo 5MB');
+      return;
+    }
+    
+    setUploadingPhoto(true);
+    
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      await axios.post(
+        `${API}/employees/${id}/photo`,
+        formData,
+        { 
+          headers: { 
+            ...getAuthHeader(),
+            'Content-Type': 'multipart/form-data'
+          } 
+        }
+      );
+      
+      toast.success('Foto do colaborador atualizada com sucesso!');
+      fetchData(); // Recarregar dados para mostrar nova foto
+    } catch (error) {
+      console.error('Erro ao fazer upload:', error);
+      toast.error('Erro ao fazer upload da foto. Tente novamente.');
+    } finally {
+      setUploadingPhoto(false);
+      if (photoInputRef.current) {
+        photoInputRef.current.value = '';
+      }
+    }
+  };
 
   if (loading) {
     return (
