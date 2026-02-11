@@ -820,48 +820,6 @@ export default function ColaboradorDetalhes() {
             )}
           </div>
         )}
-
-        {/* Documentos Assinados */}
-        {activeTab === 'documentos' && (
-          <div className="bg-white border border-slate-200 rounded-lg shadow-sm p-6">
-            <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
-              <FileText className="w-5 h-5 text-emerald-600" />
-              Documentos Assinados
-            </h3>
-            
-            {documentos.length === 0 ? (
-              <p className="text-slate-500 text-center py-8">Nenhum documento assinado</p>
-            ) : (
-              <div className="space-y-3">
-                {documentos.map((doc, idx) => (
-                  <div key={idx} className="flex items-center justify-between p-4 bg-slate-50 rounded-lg border border-slate-200">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                        <FileText className="w-5 h-5 text-blue-600" />
-                      </div>
-                      <div>
-                        <p className="font-medium text-slate-900">{doc.template_name || 'Documento'}</p>
-                        <p className="text-sm text-slate-600">
-                          Assinado em: {new Date(doc.signed_at).toLocaleString('pt-BR')}
-                        </p>
-                      </div>
-                    </div>
-                    {doc.signed_document_path && (
-                      <a 
-                        href={`${BACKEND_URL}${doc.signed_document_path}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm text-emerald-600 hover:underline"
-                      >
-                        Visualizar
-                      </a>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
       </div>
     </DashboardLayout>
   );
