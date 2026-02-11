@@ -469,17 +469,6 @@ export default function ColaboradorDetalhes() {
             <History className="w-4 h-4 inline mr-2" />
             Histórico Completo
           </button>
-          <button
-            onClick={() => setActiveTab('documentos')}
-            className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors whitespace-nowrap ${
-              activeTab === 'documentos'
-                ? 'border-emerald-500 text-emerald-600'
-                : 'border-transparent text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            <FileText className="w-4 h-4 inline mr-2" />
-            Documentos Assinados
-          </button>
         </div>
 
         {/* EPIs em Uso */}
