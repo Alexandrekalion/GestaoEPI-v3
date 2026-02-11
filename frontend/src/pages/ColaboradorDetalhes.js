@@ -545,13 +545,78 @@ export default function ColaboradorDetalhes() {
               Cadastro de Biometria Facial
             </h3>
             
+            {/* Seção de Foto do Colaborador */}
+            <div className="mb-6 p-4 bg-slate-50 border border-slate-200 rounded-lg">
+              <h4 className="font-medium text-slate-700 mb-3 flex items-center gap-2">
+                <User className="w-4 h-4" />
+                Foto do Colaborador
+              </h4>
+              
+              <div className="flex items-center gap-6">
+                {/* Foto atual */}
+                <div className="flex-shrink-0">
+                  {colaborador.photo_path ? (
+                    <img 
+                      src={`${BACKEND_URL}${colaborador.photo_path}`}
+                      alt={colaborador.full_name}
+                      className="w-32 h-32 rounded-xl object-cover border-2 border-emerald-300 shadow-md"
+                    />
+                  ) : (
+                    <div className="w-32 h-32 bg-slate-200 rounded-xl flex flex-col items-center justify-center border-2 border-dashed border-slate-300">
+                      <User className="w-12 h-12 text-slate-400" />
+                      <span className="text-xs text-slate-500 mt-1">Sem foto</span>
+                    </div>
+                  )}
+                </div>
+                
+                {/* Upload de foto */}
+                <div className="flex-1">
+                  <p className="text-sm text-slate-600 mb-3">
+                    {colaborador.photo_path 
+                      ? 'A foto é utilizada para identificação visual do colaborador. Você pode atualizar a foto a qualquer momento.'
+                      : 'Nenhuma foto cadastrada. Cadastre uma foto para permitir o reconhecimento facial.'
+                    }
+                  </p>
+                  
+                  <input
+                    ref={photoInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handlePhotoUpload}
+                    className="hidden"
+                    id="photo-upload"
+                  />
+                  
+                  <button
+                    onClick={() => photoInputRef.current?.click()}
+                    disabled={uploadingPhoto}
+                    className="bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg px-4 py-2.5 flex items-center gap-2 transition-colors disabled:opacity-50"
+                    data-testid="upload-photo-btn"
+                  >
+                    {uploadingPhoto ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        Enviando...
+                      </>
+                    ) : (
+                      <>
+                        <Upload className="w-4 h-4" />
+                        {colaborador.photo_path ? 'Atualizar Foto' : 'Cadastrar Foto'}
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            {/* Alerta se não tem foto */}
             {!colaborador.photo_path && (
               <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg mb-6">
                 <div className="flex items-start gap-3">
                   <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
                   <div>
                     <p className="font-medium text-amber-800">Foto não cadastrada</p>
-                    <p className="text-sm text-amber-700">Para utilizar o reconhecimento facial, é necessário que o colaborador tenha uma foto cadastrada.</p>
+                    <p className="text-sm text-amber-700">Cadastre uma foto acima antes de cadastrar o template facial para o reconhecimento biométrico.</p>
                   </div>
                 </div>
               </div>
@@ -559,7 +624,11 @@ export default function ColaboradorDetalhes() {
             
             {/* Templates cadastrados */}
             <div className="mb-6">
-              <h4 className="font-medium text-slate-700 mb-3">Templates Faciais Cadastrados</h4>
+              <h4 className="font-medium text-slate-700 mb-2">Templates Faciais Cadastrados</h4>
+              <p className="text-sm text-slate-500 mb-4">
+                O template facial é uma representação matemática das características do rosto do colaborador (128 pontos de referência). 
+                Ele é usado para comparar com rostos capturados pela câmera durante a entrega de EPI, permitindo a identificação automática.
+              </p>
               {facialTemplates.length === 0 ? (
                 <div className="p-6 bg-slate-50 border border-slate-200 rounded-lg text-center">
                   <ScanFace className="w-12 h-12 text-slate-300 mx-auto mb-3" />
@@ -599,9 +668,13 @@ export default function ColaboradorDetalhes() {
             
             {/* Captura de novo template */}
             <div className="border-t pt-6">
-              <h4 className="font-medium text-slate-700 mb-3">Cadastrar Novo Template</h4>
+              <h4 className="font-medium text-slate-700 mb-3">Cadastrar Novo Template via Câmera</h4>
               
-              {!modelsLoaded ? (
+              {!colaborador.photo_path ? (
+                <div className="p-4 bg-slate-100 rounded-lg text-center">
+                  <p className="text-slate-600">Cadastre uma foto do colaborador primeiro para poder capturar o template facial.</p>
+                </div>
+              ) : !modelsLoaded ? (
                 <div className="flex items-center justify-center py-8">
                   <Loader2 className="w-8 h-8 animate-spin text-blue-500 mr-3" />
                   <span className="text-slate-600">Carregando modelos de reconhecimento...</span>
