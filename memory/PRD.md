@@ -3,11 +3,37 @@
 ## Problema Original
 Sistema de Gestão de EPI (Equipamentos de Proteção Individual) com reconhecimento facial biométrico para controle de entregas.
 
-Requisitos do usuário:
-- Verificar se biometria funciona para entrega de EPI
-- Criar 5 empresas e 10 EPIs diferentes
-- Comparação facial rápida e eficiente
-- Testar todos os perfis de permissão
+## Correções Implementadas (11/02/2026)
+
+### 1. Mensagem de Erro no Login ✅
+- Adicionada mensagem de erro visível na tela quando usuário erra a senha
+- Caixa vermelha com mensagem "Usuário ou senha incorretos. Verifique suas credenciais."
+- Arquivo: `/app/frontend/src/pages/Login.js`
+
+### 2. Dashboard sem Licença ✅ 
+- Removido card "Licença do Painel" do Dashboard
+- Licença agora só aparece na aba Configurações (admin only)
+- Arquivo: `/app/frontend/src/pages/Dashboard.js`
+
+### 3. Upload de Foto do Colaborador ✅
+- Adicionada seção "Foto do Colaborador" na aba Biometria Facial
+- Botão "Cadastrar Foto" / "Atualizar Foto"
+- Suporta upload de imagens até 5MB
+- Arquivo: `/app/frontend/src/pages/ColaboradorDetalhes.js`
+
+### 4. Aba Documentos Removida ✅
+- Removida aba "Documentos Assinados" da ficha do colaborador
+- Agora são apenas 3 abas: EPIs em Uso, Biometria Facial, Histórico Completo
+- Arquivo: `/app/frontend/src/pages/ColaboradorDetalhes.js`
+
+### 5. Explicação de Template Facial ✅
+- Adicionada explicação sobre o que é "Template Facial"
+- Texto: "O template facial é uma representação matemática das características do rosto do colaborador (128 pontos de referência). Ele é usado para comparar com rostos capturados pela câmera durante a entrega de EPI, permitindo a identificação automática."
+- Arquivo: `/app/frontend/src/pages/ColaboradorDetalhes.js`
+
+### Observações sobre nomes do menu:
+- "Painel" → Verificado: já estava como "Dashboard" no menu
+- "Quaes" → Não encontrado no código. O menu "Fornecedores" está correto
 
 ## Arquitetura
 - **Frontend**: React.js com TailwindCSS
