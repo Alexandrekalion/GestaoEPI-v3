@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
-import { ArrowLeft, User, Package, AlertTriangle, Calendar, History, FileText, ScanFace, CheckCircle, Trash2, Loader2, Camera } from 'lucide-react';
+import { ArrowLeft, User, Package, AlertTriangle, Calendar, History, ScanFace, CheckCircle, Trash2, Loader2, Camera, Upload } from 'lucide-react';
 import axios from 'axios';
 import { getAuthHeader } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
