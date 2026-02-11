@@ -23,9 +23,10 @@ export default function ColaboradorDetalhes() {
   const [colaborador, setColaborador] = useState(null);
   const [historico, setHistorico] = useState([]);
   const [itemsEmUso, setItemsEmUso] = useState([]);
-  const [documentos, setDocumentos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('resumo');
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const photoInputRef = useRef(null);
   
   // Estados para biometria facial
   const [facialTemplates, setFacialTemplates] = useState([]);
