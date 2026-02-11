@@ -13,7 +13,6 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [stats, setStats] = useState(null);
-  const [license, setLicense] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -31,15 +30,6 @@ export default function Dashboard() {
         ...statsRes.data,
         alerts: alertsRes.data
       });
-
-      if (user?.role === 'admin') {
-        try {
-          const licenseRes = await axios.get(`${API}/license`, { headers: getAuthHeader() });
-          setLicense(licenseRes.data);
-        } catch (e) {
-          console.log('Licença não disponível');
-        }
-      }
     } catch (error) {
       console.error('Erro ao carregar dados:', error);
     } finally {
