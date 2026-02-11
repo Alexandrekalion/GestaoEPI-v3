@@ -8,12 +8,14 @@ export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setErrorMessage('');
 
     try {
       const { must_change_password } = await login(username, password);
@@ -26,17 +28,20 @@ export default function Login() {
     } catch (error) {
       console.error('Erro no login:', error);
       
+      let message = 'Erro ao fazer login. Tente novamente.';
+      
       if (error.response?.status === 403) {
-        toast.error('Licença expirada. Contate o administrador.');
+        message = 'Licença expirada. Contate o administrador.';
       } else if (error.response?.status === 401) {
-        toast.error('Usuário ou senha incorretos. Verifique suas credenciais.');
+        message = 'Usuário ou senha incorretos. Verifique suas credenciais.';
       } else if (error.message?.includes('Network Error') || error.code === 'ERR_NETWORK') {
-        toast.error('Erro de conexão com o servidor. Verifique sua internet e tente novamente.');
+        message = 'Erro de conexão com o servidor. Verifique sua internet.';
       } else if (error.message) {
-        toast.error(error.message);
-      } else {
-        toast.error('Erro ao fazer login. Tente novamente.');
+        message = error.message;
       }
+      
+      setErrorMessage(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -79,6 +84,13 @@ export default function Login() {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-5">
+              {/* Mensagem de erro visível */}
+              {errorMessage && (
+                <div className="p-3 bg-red-50 border border-red-200 rounded-lg" data-testid="login-error">
+                  <p className="text-sm text-red-700 font-medium">{errorMessage}</p>
+                </div>
+              )}
+              
               <div>
                 <label htmlFor="username" className="block text-sm font-medium text-slate-700 mb-1.5">
                   Usuário
