@@ -104,16 +104,14 @@ export default function ColaboradorDetalhes() {
 
   const fetchData = async () => {
     try {
-      const [colabRes, deliveriesRes, docsRes, templatesRes] = await Promise.all([
+      const [colabRes, deliveriesRes, templatesRes] = await Promise.all([
         axios.get(`${API}/employees/${id}`, { headers: getAuthHeader() }),
         axios.get(`${API}/deliveries?employee_id=${id}`, { headers: getAuthHeader() }),
-        axios.get(`${API}/document-signatures?employee_id=${id}`, { headers: getAuthHeader() }).catch(() => ({ data: [] })),
         axios.get(`${API}/employees/${id}/facial-templates`, { headers: getAuthHeader() }).catch(() => ({ data: [] }))
       ]);
       
       setColaborador(colabRes.data);
       setHistorico(deliveriesRes.data);
-      setDocumentos(docsRes.data);
       setFacialTemplates(templatesRes.data);
       
       // Calcular itens em uso
