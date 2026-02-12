@@ -552,21 +552,26 @@ export default function ColaboradorDetalhes() {
                 Foto do Colaborador
               </h4>
               
-              <div className="flex items-center gap-6">
+              <div className="flex flex-col sm:flex-row items-start gap-6">
                 {/* Foto atual */}
                 <div className="flex-shrink-0">
                   {colaborador.photo_path ? (
                     <img 
-                      src={`${BACKEND_URL}${colaborador.photo_path}`}
+                      src={`${BACKEND_URL}${colaborador.photo_path}?t=${Date.now()}`}
                       alt={colaborador.full_name}
                       className="w-32 h-32 rounded-xl object-cover border-2 border-emerald-300 shadow-md"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextSibling.style.display = 'flex';
+                      }}
                     />
-                  ) : (
-                    <div className="w-32 h-32 bg-slate-200 rounded-xl flex flex-col items-center justify-center border-2 border-dashed border-slate-300">
-                      <User className="w-12 h-12 text-slate-400" />
-                      <span className="text-xs text-slate-500 mt-1">Sem foto</span>
-                    </div>
-                  )}
+                  ) : null}
+                  <div 
+                    className={`w-32 h-32 bg-slate-200 rounded-xl flex-col items-center justify-center border-2 border-dashed border-slate-300 ${colaborador.photo_path ? 'hidden' : 'flex'}`}
+                  >
+                    <User className="w-12 h-12 text-slate-400" />
+                    <span className="text-xs text-slate-500 mt-1">Sem foto</span>
+                  </div>
                 </div>
                 
                 {/* Upload de foto */}
@@ -587,24 +592,73 @@ export default function ColaboradorDetalhes() {
                     id="photo-upload"
                   />
                   
-                  <button
-                    onClick={() => photoInputRef.current?.click()}
-                    disabled={uploadingPhoto}
-                    className="bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg px-4 py-2.5 flex items-center gap-2 transition-colors disabled:opacity-50"
-                    data-testid="upload-photo-btn"
-                  >
-                    {uploadingPhoto ? (
-                      <>
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        Enviando...
-                      </>
-                    ) : (
-                      <>
-                        <Upload className="w-4 h-4" />
-                        {colaborador.photo_path ? 'Atualizar Foto' : 'Cadastrar Foto'}
-                      </>
-                    )}
-                  </button>
+                  {/* Webcam para tirar foto */}
+                  {showPhotoWebcam ? (
+                    <div className="mb-4">
+                      <Webcam
+                        ref={photoWebcamRef}
+                        audio={false}
+                        screenshotFormat="image/jpeg"
+                        className="w-full max-w-md rounded-lg border-2 border-blue-300"
+                        videoConstraints={{
+                          facingMode: "user",
+                          width: { ideal: 640 },
+                          height: { ideal: 480 }
+                        }}
+                        onUserMediaError={() => {
+                          toast.error('Erro ao acessar câmera');
+                          setShowPhotoWebcam(false);
+                        }}
+                      />
+                      <div className="flex gap-2 mt-3">
+                        <button
+                          onClick={capturePhotoFromWebcam}
+                          disabled={uploadingPhoto}
+                          className="bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-lg px-4 py-2 flex items-center gap-2"
+                        >
+                          <Camera className="w-4 h-4" />
+                          Tirar Foto
+                        </button>
+                        <button
+                          onClick={() => setShowPhotoWebcam(false)}
+                          className="bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium rounded-lg px-4 py-2"
+                        >
+                          Cancelar
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex flex-wrap gap-2">
+                      <button
+                        onClick={() => setShowPhotoWebcam(true)}
+                        disabled={uploadingPhoto}
+                        className="bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-lg px-4 py-2.5 flex items-center gap-2 transition-colors disabled:opacity-50"
+                        data-testid="capture-photo-btn"
+                      >
+                        <Camera className="w-4 h-4" />
+                        Tirar Foto
+                      </button>
+                      
+                      <button
+                        onClick={() => photoInputRef.current?.click()}
+                        disabled={uploadingPhoto}
+                        className="bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg px-4 py-2.5 flex items-center gap-2 transition-colors disabled:opacity-50"
+                        data-testid="upload-photo-btn"
+                      >
+                        {uploadingPhoto ? (
+                          <>
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            Enviando...
+                          </>
+                        ) : (
+                          <>
+                            <Upload className="w-4 h-4" />
+                            Selecionar da Galeria
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
