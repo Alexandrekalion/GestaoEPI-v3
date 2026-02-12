@@ -48,7 +48,11 @@ export const AuthProvider = ({ children }) => {
     const response = await axios.post(`${API}/auth/login`, { username, password });
     const { access_token, must_change_password, role } = response.data;
     
-    // Verificar se o token é válido buscando dados do usuário
+    // Salvar token imediatamente para garantir navegação
+    localStorage.setItem('token', access_token);
+    setToken(access_token);
+    
+    // Buscar dados do usuário se não precisa mudar senha
     if (!must_change_password) {
       try {
         const userResponse = await axios.get(`${API}/auth/me`, {
@@ -57,14 +61,9 @@ export const AuthProvider = ({ children }) => {
         setUser(userResponse.data);
       } catch (error) {
         console.error('Erro ao buscar usuário após login:', error);
-        // Se não conseguir buscar usuário, não salvar token
-        throw new Error('Erro ao validar sessão. Tente novamente.');
+        // Mesmo com erro, token está salvo, user será buscado na próxima navegação
       }
     }
-    
-    // Só salvar token depois de tudo OK
-    localStorage.setItem('token', access_token);
-    setToken(access_token);
     
     return { must_change_password, role };
   };
