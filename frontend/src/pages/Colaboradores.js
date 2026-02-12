@@ -15,6 +15,7 @@ const API = `${BACKEND_URL}/api`;
 // Componente de Avatar com fallback para erro de carregamento
 const AvatarImage = ({ src, alt, className, fallbackClassName }) => {
   const [hasError, setHasError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   
   if (hasError || !src) {
     return (
@@ -25,12 +26,23 @@ const AvatarImage = ({ src, alt, className, fallbackClassName }) => {
   }
   
   return (
-    <img 
-      src={src} 
-      alt={alt || ""} 
-      className={className}
-      onError={() => setHasError(true)}
-    />
+    <>
+      {isLoading && (
+        <div className={fallbackClassName || "w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0"}>
+          <User className="w-6 h-6 text-emerald-600" />
+        </div>
+      )}
+      <img 
+        src={src} 
+        alt={alt || ""} 
+        className={`${className} ${isLoading ? 'hidden' : ''}`}
+        onLoad={() => setIsLoading(false)}
+        onError={() => {
+          setHasError(true);
+          setIsLoading(false);
+        }}
+      />
+    </>
   );
 };
 
