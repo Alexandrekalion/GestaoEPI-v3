@@ -300,13 +300,37 @@ export default function ColaboradorDetalhes() {
       return;
     }
     
+    await uploadPhoto(file);
+  };
+  
+  // Capturar foto da webcam
+  const capturePhotoFromWebcam = async () => {
+    if (!photoWebcamRef.current) return;
+    
+    const imageSrc = photoWebcamRef.current.getScreenshot();
+    if (!imageSrc) {
+      toast.error('Não foi possível capturar a imagem');
+      return;
+    }
+    
+    // Converter base64 para arquivo
+    const res = await fetch(imageSrc);
+    const blob = await res.blob();
+    const file = new File([blob], `photo_${Date.now()}.jpg`, { type: 'image/jpeg' });
+    
+    setShowPhotoWebcam(false);
+    await uploadPhoto(file);
+  };
+  
+  // Função comum de upload
+  const uploadPhoto = async (file) => {
     setUploadingPhoto(true);
     
     try {
       const formData = new FormData();
       formData.append('file', file);
       
-      await axios.post(
+      const response = await axios.post(
         `${API}/employees/${id}/photo`,
         formData,
         { 
@@ -317,8 +341,13 @@ export default function ColaboradorDetalhes() {
         }
       );
       
+      // Atualizar estado local imediatamente
+      setColaborador(prev => ({
+        ...prev,
+        photo_path: response.data.photo_path
+      }));
+      
       toast.success('Foto do colaborador atualizada com sucesso!');
-      fetchData(); // Recarregar dados para mostrar nova foto
     } catch (error) {
       console.error('Erro ao fazer upload:', error);
       toast.error('Erro ao fazer upload da foto. Tente novamente.');
