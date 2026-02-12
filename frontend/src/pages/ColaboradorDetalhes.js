@@ -26,7 +26,9 @@ export default function ColaboradorDetalhes() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('resumo');
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const [showPhotoWebcam, setShowPhotoWebcam] = useState(false);
   const photoInputRef = useRef(null);
+  const photoWebcamRef = useRef(null);
   
   // Estados para biometria facial
   const [facialTemplates, setFacialTemplates] = useState([]);
