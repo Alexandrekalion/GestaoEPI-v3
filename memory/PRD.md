@@ -31,9 +31,32 @@ Sistema de Gestão de EPI (Equipamentos de Proteção Individual) com reconhecim
 - Texto: "O template facial é uma representação matemática das características do rosto do colaborador (128 pontos de referência). Ele é usado para comparar com rostos capturados pela câmera durante a entrega de EPI, permitindo a identificação automática."
 - Arquivo: `/app/frontend/src/pages/ColaboradorDetalhes.js`
 
-### Observações sobre nomes do menu:
-- "Painel" → Verificado: já estava como "Dashboard" no menu
-- "Quaes" → Não encontrado no código. O menu "Fornecedores" está correto
+### Correções da Sessão 2 (12/02/2026)
+
+1. **Login com erro de senha** ✅
+   - Mensagem de erro visível em caixa vermelha
+   - Não precisa mais atualizar a página
+
+2. **Login correto navega direto** ✅  
+   - Token salvo antes de buscar usuário
+   - Navegação funciona sem refresh
+
+3. **Tirar foto com webcam** ✅
+   - Adicionado botão "Tirar Foto" na aba Biometria Facial
+   - Usa webcam do dispositivo para capturar
+   - Função `capturePhotoFromWebcam` com conversão base64->file
+
+4. **Selecionar foto da galeria** ✅
+   - Botão "Selecionar da Galeria" para upload de arquivo
+   - Atualiza estado local imediatamente após upload
+
+5. **Lista de colaboradores com foto** ✅
+   - Componente AvatarImage com loading state
+   - Fallback para ícone quando sem foto
+
+6. **Upload de foto atualiza imediatamente** ✅
+   - Não precisa mais recarregar página
+   - Estado local atualizado após upload bem-sucedido
 
 ## Arquitetura
 - **Frontend**: React.js com TailwindCSS
