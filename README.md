@@ -77,4 +77,4 @@ O projeto evidencia atuacao em arquitetura full stack, APIs REST, interfaces adm
 
 ## Autoria
 
-Desenvolvido por Michele Santana — Kalion Tecnologia
+Desenvolvido por Alexandre Santana dos Santos — Kalion Tecnologia
